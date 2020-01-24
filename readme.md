@@ -8,7 +8,7 @@
 前后端交互都是用的ajax传的json
 
 <hr/>
-部署网址： [点我](http://121.36.23.95:8080/webstudy)
+部署网址： http://121.36.23.95:8080/webstudy
 
 version 0.9.0
 
