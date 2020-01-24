@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<!--  head start -->
+<head>
+    <meta http-equiv="content-type" content="text/html" charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>文章编辑</title>
+    <link href="static/css/bootstrap/bootstrap.min.css" rel="stylesheet">
+    <link href="static/css/font-awesome/font-awesome.min.css" rel="stylesheet">
+    <link href="static/css/theme.css" rel="stylesheet">
+    <link href="static/css/responsive.css" rel="stylesheet">
+    <link href="static/css/highlight/highlight.min.css" rel="stylesheet"/>
+    <!--[if lt IE 9]>
+    <script src="static/js/html5shiv/html5shiv.min.js"></script>
+    <script src="static/js/respond/respond.min.js"></script>
+    <![endif]-->
+    <link rel="shortcut icon" href="static/img/ico/favicon.ico">
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="static/img/ico/apple-touch-icon-144-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="static/img/ico/apple-touch-icon-114-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="static/img/ico/apple-touch-icon-72-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" href="static/img/ico/apple-touch-icon-57-precomposed.png">
+</head>
+<!--  head end -->
+
+<body>
+    <!-- 导航栏 start -->
+    <header id="header">
+        <div class="navbar navbar-inverse" role="banner">
+            <div class="container">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="sr-only">英语学习</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="./index.html">
+                        <h1><img src="static/img/logo.png" alt="logo"></h1>
+                    </a>
+                </div>
+                <div class="collapse navbar-collapse">
+                    <ul class="nav navbar-nav navbar-right">
+                        <li class="dropdown"><a href="index.html">首页</a></li>
+                        <li class="dropdown"><a href="video.html">视频浏览</a></li>
+                        <li class="dropdown"><a href="word.html">单词背诵</a></li>
+                        <li class="active"><a href="articleList.html">文章阅读</a></li>
+                        <li class="dropdown"><a href="about.html">关于我们</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </header>
+    <!-- 导航栏 end -->
+
+    <div class='container'>
+        <div class="row">
+        <div id="textArea" class="col-lg-10 col-md-10 col-sm-10 col-lg-offset-1 col-md-offset-1 col-sm-offset-1">
+            <div class="input-group input-group-lg">
+                <span class="input-group-addon">标题</span>
+                <label for="title"></label><input type="text" id = "title" class="form-control" placeholder="请输入文章标题" aria-describedby="sizing-addon1">
+            </div>
+        </div>
+        <div class="col-lg-10 col-md-10 col-sm-10 col-lg-offset-1 col-md-offset-1 col-sm-offset-1" style="margin-top: 10px">
+            <label for="category">Category </label>
+            <select class="form-control" id="category">
+            </select>
+        </div>
+
+        <div id='toolbar' class="col-md-12" style="margin-top: 10px; border: 1px solid #00B895">
+            <button type="button" class="btn btn-group" onclick="acen_edit.insert('**?**')">加粗</button>
+            <button type="button" class="btn btn-group" onclick="acen_edit.insert('_?_')">斜体</button>
+            <button type="button" class="btn btn-group" onclick="acen_edit.insert('>')">引用</button>
+            <label for="theme">主题</label><select id="theme">
+                <optgroup label="Bright">
+                    <option value="ace/theme/chrome">Chrome</option>
+                    <option value="ace/theme/clouds">Clouds</option>
+                    <option value="ace/theme/crimson_editor">Crimson Editor</option>
+                    <option value="ace/theme/dawn">Dawn</option>
+                    <option value="ace/theme/dreamweaver">Dreamweaver</option>
+                    <option value="ace/theme/eclipse">Eclipse</option>
+                    <option value="ace/theme/github" selected>GitHub</option>
+                    <option value="ace/theme/iplastic">IPlastic</option>
+                    <option value="ace/theme/solarized_light">Solarized Light</option>
+                    <option value="ace/theme/textmate">TextMate</option>
+                    <option value="ace/theme/tomorrow">Tomorrow</option>
+                    <option value="ace/theme/xcode">XCode</option>
+                    <option value="ace/theme/kuroir">Kuroir</option>
+                    <option value="ace/theme/katzenmilch">KatzenMilch</option>
+                    <option value="ace/theme/sqlserver">SQL Server</option>
+                </optgroup>
+                <optgroup label="Dark">
+                    <option value="ace/theme/ambiance">Ambiance</option>
+                    <option value="ace/theme/chaos">Chaos</option>
+                    <option value="ace/theme/clouds_midnight">Clouds Midnight</option>
+                    <option value="ace/theme/cobalt">Cobalt</option>
+                    <option value="ace/theme/gruvbox">Gruvbox</option>
+                    <option value="ace/theme/idle_fingers">idle Fingers</option>
+                    <option value="ace/theme/kr_theme">krTheme</option>
+                    <option value="ace/theme/merbivore">Merbivore</option>
+                    <option value="ace/theme/merbivore_soft">Merbivore Soft</option>
+                    <option value="ace/theme/mono_industrial">Mono Industrial</option>
+                    <option value="ace/theme/monokai">Monokai</option>
+                    <option value="ace/theme/pastel_on_dark">Pastel on dark</option>
+                    <option value="ace/theme/solarized_dark">Solarized Dark</option>
+                    <option value="ace/theme/terminal">Terminal</option>
+                    <option value="ace/theme/tomorrow_night">Tomorrow Night</option>
+                    <option value="ace/theme/tomorrow_night_blue">Tomorrow Night Blue</option>
+                    <option value="ace/theme/tomorrow_night_bright">Tomorrow Night Bright</option>
+                    <option value="ace/theme/tomorrow_night_eighties">Tomorrow Night 80s</option>
+                    <option value="ace/theme/twilight">Twilight</option>
+                    <option value="ace/theme/vibrant_ink">Vibrant Ink</option>
+                </optgroup>
+            </select>
+            <label for="fontsize">字体大小</label><select id="fontsize" size="1">
+                <option value="10px">10px</option>
+                <option value="11px">11px</option>
+                <option value="12px">12px</option>
+                <option value="13px">13px</option>
+                <option value="14px">14px</option>
+                <option value="16px" selected>16px</option>
+                <option value="18px">18px</option>
+                <option value="20px">20px</option>
+                <option value="24px">24px</option>
+            </select>
+            <label for="folding">代码折行</label><select id="folding" size="1">
+                <option value="manual">manual</option>
+                <option value="markbegin" selected="selected">mark begin</option>
+                <option value="markbeginend">mark begin and end</option>
+            </select>
+            <label for="soft_wrap">自动换行</label><select id="soft_wrap" size="1">
+                <option value="off">Off</option>
+                <option value="40">40 Chars</option>
+                <option value="80">80 Chars</option>
+                <option value="free">Free</option>
+            </select>
+            <label for="select_style">全选样式</label><input type="checkbox" name="select_style" id="select_style" checked="">
+            <label for="highlight_active">光标行高光</label><input type="checkbox" name="highlight_active" id="highlight_active" checked="">
+            <label for="show_gutter">显示行号</label><input type="checkbox" id="show_gutter" checked="">
+            <label for="show_print_margin">打印边距</label><input type="checkbox" id="show_print_margin" checked="">
+        </div>
+
+        <div id='editor-column' class='col-lg-6 col-sm-6 col-md-6' style="margin-top: 5px; border: #1c0eff 1px solid;">
+            <h3>内容：</h3><hr/>
+            <div id='panel-editor'>
+                <!--编辑区-->
+                <div class="editor-content" id="mdeditor" style="min-height: 600px"></div>
+            </div>
+        </div>
+        <div id='preview-column' class='col-lg-6 col-sm-6 col-md-6' style="margin-top: 5px; border: #1c0eff 1px solid;">
+            <h3>预览：</h3><hr/>
+            <div id='panel-preview'>
+                <!--显示区-->
+                <div id="preview" class="markdown-body" style="min-height: 600px"></div>
+            </div>
+        </div>
+
+        <div class="col-md-offset-4 col-lg-offset-4 col-sm-offset-4 col-md-4 col-lg4 col-sm-4" style="margin-top: 20px;margin-bottom: 30px">
+            <button class="btn-lg btn-block btn-success" type="button" id="submit">submit</button>
+        </div>
+        </div>
+    </div>
+
+    <!-- footer start -->
+    <footer id="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="copyright-text text-center">
+                        <p>&copy; 嘤嘤嘤 2020. All Rights Reserved.</p>
+                        <p>Designed by <a target="_blank" href="http://www.baidu.com">嘤嘤嘤</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <!-- footer end -->
+</body>
+
+<script type="text/javascript" src="static/js/jquery/jquery-3.4.1.min.js"></script>
+<script type="text/javascript" src="static/js/bootstrap/bootstrap.min.js"></script>
+<script type="text/javascript" src="static/js/jquery/jquery.md5.js"></script>
+<script type="text/javascript" src="static/js/article.js"></script>
+<script type="text/javascript" src="static/js/user.js"></script>
+<script type="text/javascript" src="static/js/ace/ace.js"></script>
+<script type="text/javascript" src="static/js/marked/marked.min.js"></script>
+<script type="text/javascript" src="static/js/highlight/highlight.min.js"></script>
+<script type="text/javascript" src="static/js/main.js"></script>
+<script>
+    'use strict';
+    marked.setOptions({
+        gfm:true,
+        highlight: function (code,lang) {
+            return hljs.highlight(lang,code).value;
+        }
+    });
+    let acen_edit = ace.edit('mdeditor');
+    acen_edit.setTheme('ace/theme/github');
+    acen_edit.getSession().setMode('ace/mode/markdown');
+    acen_edit.renderer.setShowPrintMargin(false);
+    acen_edit.setFontSize(16);
+    $("#mdeditor").keyup(function() {
+        $("#preview").html(marked(acen_edit.getValue()));
+    });
+
+    $("#theme").change(function() {
+        acen_edit.setTheme($(this).val());
+    });
+    $("#fontsize").change(function() {
+        acen_edit.setFontSize($(this).val());
+    });
+    $("#folding").change(function() {
+        session.setFoldStyle($(this).val());
+    });
+    $("#select_style").change(function() {
+        acen_edit.setOption("selectionStyle", this.checked ? "line" : "text");
+    });
+    $("#highlight_active").change(function() {
+        acen_edit.setHighlightActiveLine(this.checked);
+    });
+    $("#soft_wrap").change(function() {
+        acen_edit.setOption("wrap", $(this).val());
+    });
+    $("#show_print_margin").change(function() {
+        acen_edit.renderer.setShowPrintMargin(this.checked);
+    });
+    $("#show_gutter").change(function (){
+        acen_edit.renderer.setShowGutter(this.checked);
+    });
+    window.onload = articleEditInIt;
+    let articleEntry = {} ; //article 对象
+</script>
+</html>

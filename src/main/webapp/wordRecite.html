@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<!--  head start -->
+<head>
+    <meta http-equiv="content-type" content="text/html" charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>单词背诵</title>
+    <link href="static/css/bootstrap/bootstrap.min.css" rel="stylesheet">
+    <link href="static/css/font-awesome/font-awesome.min.css" rel="stylesheet">
+    <link href="static/css/theme.css" rel="stylesheet">
+    <link href="static/css/responsive.css" rel="stylesheet">
+    <!--[if lt IE 9]>
+    <script src="static/js/html5shiv/html5shiv.min.js"></script>
+    <script src="static/js/respond/respond.min.js"></script>
+    <![endif]-->
+    <link rel="shortcut icon" href="static/img/ico/favicon.ico">
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="static/img/ico/apple-touch-icon-144-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="static/img/ico/apple-touch-icon-114-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="static/img/ico/apple-touch-icon-72-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" href="static/img/ico/apple-touch-icon-57-precomposed.png">
+</head>
+<!--  head end -->
+
+<body>
+    <!-- 导航栏 start -->
+    <header id="header">
+        <div class="navbar navbar-inverse" role="banner">
+            <div class="container">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="sr-only">英语学习</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="./index.html">
+                        <h1><img src="static/img/logo.png" alt="logo"></h1>
+                    </a>
+                </div>
+                <div class="collapse navbar-collapse">
+                    <ul class="nav navbar-nav navbar-right">
+                        <li class="dropdown"><a href="index.html">首页</a></li>
+                        <li class="dropdown"><a href="video.html">视频浏览</a></li>
+                        <li class="active"><a href="word.html">单词背诵</a></li>
+                        <li class="dropdown"><a href="articleList.html">文章阅读</a></li>
+                        <li class="dropdown"><a href="about.html">关于我们</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </header>
+    <!-- 导航栏 end -->
+
+    <div class="container" style="background: url('./static/img/home/tour-bg.png')">
+        <div class="row">
+            <div class="col-md-5 col-sm-5">
+                <img alt="wordPicture" id="wordPicture" class="img-responsive" src=""/>
+            </div>
+            <div class="col-md-7 col-sm-7">
+                <h1>
+                    <span id="wordName"></span>
+                    <i id="audio" class="fa btn fa-volume-down fa-2x fa-fw" style="margin-left: 20px;margin-right: 20px"></i>
+                    <button class="btn btn-success" id="collect"><span class="fa fa-star-o"></span>收藏</button>
+                </h1>
+
+                <h2>单词释义：</h2>
+                <h2 id="translate"></h2>
+                <h2><span id = "wordExample"></span><br/>
+                    <small id = "exampleTranslate"></small>
+                </h2>
+            </div>
+            <div class="col-md-12 col-sm-12 text-center" style="margin-top: 40px;margin-bottom: 10px">
+                <i onclick="preWord();" class="fa fa-arrow-circle-left fa-5x" style="margin: 20px"></i>
+                <i onclick="nextWord();" class="fa fa-arrow-circle-right fa-5x" style="margin: 20px"></i>
+            </div>
+            <div class="col-md-12 col-sm-12 text-center">
+                <ul class="pagination">
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- footer start -->
+    <footer id="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="copyright-text text-center">
+                        <p>&copy; 嘤嘤嘤 2020. All Rights Reserved.</p>
+                        <p>Designed by <a target="_blank" href="http://www.baidu.com">嘤嘤嘤</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <!-- footer end -->
+</body>
+
+<script type="text/javascript" src="static/js/jquery/jquery-3.4.1.min.js"></script>
+<script type="text/javascript" src="static/js/bootstrap/bootstrap.min.js"></script>
+<script type="text/javascript" src="static/js/jquery/jquery.md5.js"></script>
+<script type="text/javascript" src="static/js/user.js"></script>
+<script type="text/javascript" src="static/js/main.js"></script>
+<script type="text/javascript" src="static/js/createjs/createjs.min.js"></script>
+<script type="text/javascript" src="static/js/word.js"></script>
+<script>
+    let word_list = [];
+    let now_word_index = 0;
+    window.onload = wordInit;
+    createjs.Sound.initializeDefaultPlugins();
+    createjs.Sound.alternateExtensions = ["mpeg"];
+    $("#audio").on('click',function () {
+        createjs.Sound.play(now_word_index);
+    });
+    $(document).keydown(function(event){//设置按键转换单词
+        if(event.which === 37)preWord();// left
+        if(event.which === 39)nextWord();// right
+    });
+</script>
+</html>

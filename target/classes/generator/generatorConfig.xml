@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration
+        PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+        "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+
+<generatorConfiguration>
+    <!-- 本地数据库连接驱动地址 -->
+    <classPathEntry location="C:\Users\yangbo\.m2\repository\mysql\mysql-connector-java\8.0.18\mysql-connector-java-8.0.18.jar"/>
+
+    <context id="Mysql" targetRuntime="MyBatis3Simple" defaultModelType="flat">
+        <!-- 自动识别数据库关键字，默认false，如果设置为true，根据SqlReservedWords中定义的关键字列表；
+        一般保留默认值，遇到数据库关键字（Java关键字），使用columnOverride覆盖  -->
+        <property name="autoDelimitKeywords" value="false"/>
+        <!-- 生成的Java文件的编码 -->
+        <property name="javaFileEncoding" value="UTF-8"/>
+        <!-- 格式化java代码 -->
+        <property name="javaFormatter" value="org.mybatis.generator.api.dom.DefaultJavaFormatter"/>
+        <!-- 格式化XML代码 -->
+        <property name="xmlFormatter" value="org.mybatis.generator.api.dom.DefaultXmlFormatter"/>
+        <!-- beginningDelimiter和endingDelimiter：指明数据库的用于标记数据库对象名的符号，比如ORACLE就是双引号，MYSQL默认是`反引号； -->
+        <property name="beginningDelimiter" value="`"/>
+        <property name="endingDelimiter" value="`"/>
+
+        <property name="mergeable" value="false"/>
+        <jdbcConnection driverClass="com.mysql.cj.jdbc.Driver"
+                        connectionURL="jdbc:mysql://localhost:3306/study?characterEncoding=UTF-8 &amp; useSSL=false &amp; serverTimezone=Asia/Shanghai"
+                        userId="root"
+                        password="admin">
+            <property name="nullCatalogMeansCurrent" value="true"/>
+        </jdbcConnection>
+
+        <!-- 生成实体类 -->
+        <javaModelGenerator targetPackage="edu.study.model" targetProject="src/main/java">
+            <property name="enableSubPackages" value="true"/>
+            <property name="trimStrings" value="true"/>
+        </javaModelGenerator>
+
+        <!-- 生成mapper.xml -->
+        <sqlMapGenerator targetPackage="mapper" targetProject="src/main/resources">
+            <property name="enableSubPackages" value="true"/>
+        </sqlMapGenerator>
+
+        <!-- 生成mapper.java -->
+        <javaClientGenerator type="XMLMAPPER" targetPackage="edu.study.dao" targetProject="src/main/java">
+            <property name="enableSubPackages" value="true"/>
+        </javaClientGenerator>
+
+        <!-- 库中的表名对应实体类的名字 -->
+        <!-- table tableName="administrator" domainObjectName="Administrator"/>
+        <table tableName="article_category" domainObjectName="ArticleCategory"/>
+        <table tableName="article" domainObjectName="Article"/>
+        <table tableName="article_collection" domainObjectName="ArticleCollection"/>
+        <table tableName="comment" domainObjectName="Comment"/>
+        <table tableName="user" domainObjectName="User"/>
+        <table tableName="video" domainObjectName="Video"/>
+        <table tableName="video_collection" domainObjectName="VideoCollection"/ -->
+        <table tableName="word" domainObjectName="Word"/>
+        <table tableName="word_collection" domainObjectName="WordCollection"/>
+        <table tableName="word_recited" domainObjectName="WordRecited"/>
+    </context>
+</generatorConfiguration>
