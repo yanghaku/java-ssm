@@ -11,15 +11,22 @@ $.ajax({
 	error: login_error
 });
 
-function myAlert(header,content) {
-	$("#alert_modal").remove();
-	$("body").append('<div class="modal fade" id="alert_modal"><div class="modal-dialog">'+
-'<div class="modal-content"><div class="modal-header"><h4 class="center-block text-warning"><b>' + header +
-'</b></h4></div><div class="modal-body"><p class="text-center text-danger"><b>' + content +
-'</b></p><div class="modal-footer"><button type="button" class="btn btn-danger" data-dismiss="modal">cancel</button>' +
-'</div></div></div></div>');
-	$("#alert_modal").modal();
-}
+
+toastr.options = { // toastr配置
+	"closeButton": true, //是否显示关闭按钮
+	"debug": false, //是否使用debug模式
+	"progressBar": true, //是否显示进度条
+	"positionClass": "toast-top-center",//显示的动画位置
+	"showDuration": "400", //显示的动画时间
+	"hideDuration": "1000", //消失的动画时间
+	"timeOut": "7000", //展现时间
+	"extendedTimeOut": "1000", //加长展示时间
+	"showEasing": "swing", //显示时的动画缓冲方式
+	"hideEasing": "linear", //消失时的动画缓冲方式
+	"showMethod": "fadeIn", //显示时的动画方式
+	"hideMethod": "fadeOut" //消失时的动画方式
+};
+
 
 //取得get参数
 function getRequest() {

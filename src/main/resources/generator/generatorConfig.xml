@@ -48,14 +48,18 @@
         <!-- 库中的表名对应实体类的名字 -->
         <!-- table tableName="administrator" domainObjectName="Administrator"/>
         <table tableName="article_category" domainObjectName="ArticleCategory"/>
-        <table tableName="article" domainObjectName="Article"/>
         <table tableName="article_collection" domainObjectName="ArticleCollection"/>
         <table tableName="comment" domainObjectName="Comment"/>
         <table tableName="user" domainObjectName="User"/>
         <table tableName="video" domainObjectName="Video"/>
-        <table tableName="video_collection" domainObjectName="VideoCollection"/ -->
+        <table tableName="video_collection" domainObjectName="VideoCollection"/>
         <table tableName="word" domainObjectName="Word"/>
         <table tableName="word_collection" domainObjectName="WordCollection"/>
         <table tableName="word_recited" domainObjectName="WordRecited"/>
+        <table tableName="article" domainObjectName="Article"/>
+        <table tableName="article_agree" domainObjectName="ArticleAgree"/>
+        <table tableName="article_keyword" domainObjectName="ArticleKeyword"/>
+        <table tableName="user_keyword" domainObjectName="UserKeyword"/ -->
+        <table tableName="article_recommend" domainObjectName="ArticleRecommend"/>
     </context>
 </generatorConfiguration>

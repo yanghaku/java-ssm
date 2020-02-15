@@ -10,6 +10,7 @@
     <title>单词背诵</title>
     <link href="static/css/bootstrap/bootstrap.min.css" rel="stylesheet">
     <link href="static/css/font-awesome/font-awesome.min.css" rel="stylesheet">
+    <link href="static/css/toastr/toastr.min.css" rel="stylesheet">
     <link href="static/css/theme.css" rel="stylesheet">
     <link href="static/css/responsive.css" rel="stylesheet">
     <!--[if lt IE 9]>
@@ -27,7 +28,7 @@
 <body>
     <!-- 导航栏 start -->
     <header id="header">
-        <div class="navbar navbar-inverse" role="banner">
+        <div class="navbar" role="banner">
             <div class="container">
                 <div class="navbar-header">
                     <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
@@ -63,7 +64,8 @@
                 <h1>
                     <span id="wordName"></span>
                     <i id="audio" class="fa btn fa-volume-down fa-2x fa-fw" style="margin-left: 20px;margin-right: 20px"></i>
-                    <button class="btn btn-success" id="collect"><span class="fa fa-star-o"></span>收藏</button>
+                    <button class="btn btn-success" id="collect" onclick="collectWord()"></button>
+                    <button class="btn btn-success" id="recite" onclick="reciteWord()"></button>
                 </h1>
 
                 <h2>单词释义：</h2>
@@ -102,6 +104,7 @@
 <script type="text/javascript" src="static/js/jquery/jquery-3.4.1.min.js"></script>
 <script type="text/javascript" src="static/js/bootstrap/bootstrap.min.js"></script>
 <script type="text/javascript" src="static/js/jquery/jquery.md5.js"></script>
+<script type="text/javascript" src="static/js/toastr/toastr.min.js"></script>
 <script type="text/javascript" src="static/js/user.js"></script>
 <script type="text/javascript" src="static/js/main.js"></script>
 <script type="text/javascript" src="static/js/createjs/createjs.min.js"></script>

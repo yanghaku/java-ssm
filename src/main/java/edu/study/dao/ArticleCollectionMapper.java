@@ -1,6 +1,8 @@
 package edu.study.dao;
 
 import edu.study.model.ArticleCollection;
+
+import java.util.Date;
 import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
@@ -48,4 +50,6 @@ public interface ArticleCollectionMapper {
     Integer countByArticleId(Integer articleId);
 
     Integer countByUsername(String username);
+
+    List<ArticleCollection> selectByTime(Date date);
 }

@@ -162,7 +162,7 @@
   padding: 30px 0 60px 0;
 }
 
-#header .navbar-inverse .container{
+#header .navbar .container{
   position: relative;
 }
 
@@ -262,30 +262,35 @@
   margin: 0;
 }
 
+#header .navbar-nav.navbar-right > li {
+  margin-left: 20px;
+}
+
 #header .navbar-nav.navbar-right >li:last-child{
   margin-right: 20px;
 }
 
 #header .navbar-nav.navbar-right >li a {
   color: #000;
-  font-size: 12px;
+  font-size: 20px;
   padding: 20px;
   text-transform: uppercase;
   font-weight: 300;
 }
 
 
-#header .navbar-inverse .navbar-nav  li.active > a,  
-#header .navbar-inverse .navbar-nav  li.active > a:focus, 
+#header .navbar .navbar-nav  li.active > a,
+#header .navbar .navbar-nav  li.active > a:focus,
 #header .navbar-nav.navbar-right li > a:hover,
-.navbar-inverse .navbar-nav > .open > a {
+.navbar .navbar-nav > .open > a {
   background-color: inherit;
   border: 0;
   color: #00aeef;
 }
 
-#header .navbar-inverse .navbar-nav  li a:hover{
+#header .navbar .navbar-nav  li a:hover{
   color: #00aeef;
+  background-color: white;
 }
 
 

@@ -44,4 +44,6 @@ public interface WordCollectionMapper {
      * @mbg.generated Tue Jan 21 10:57:41 CST 2020
      */
     int updateByPrimaryKey(WordCollection record);
+
+    int countByUsername(String username);
 }

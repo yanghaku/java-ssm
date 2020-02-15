@@ -2,6 +2,7 @@ package edu.study.dao;
 
 import edu.study.model.Video;
 import java.util.List;
+import java.util.Map;
 
 public interface VideoMapper {
     /**
@@ -45,4 +46,8 @@ public interface VideoMapper {
     int updateByPrimaryKey(Video record);
 
     int insertAndGetId(Video record);
+
+    int countAll();
+
+    List<Video> selectByPageLimit(Map<String,Object> mp);
 }

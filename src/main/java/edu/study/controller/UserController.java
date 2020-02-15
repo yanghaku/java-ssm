@@ -1,6 +1,8 @@
 package edu.study.controller;
 
+import edu.study.dao.UserKeywordMapper;
 import edu.study.dao.UserMapper;
+import edu.study.model.Keyword;
 import edu.study.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -16,6 +18,9 @@ public class UserController {
 
     @Autowired
     UserMapper userService;
+
+    @Autowired
+    UserKeywordMapper userKeywordService;
 
     /**
      * 获取当前用户状态
@@ -65,9 +70,6 @@ public class UserController {
             return "username could not be null";
         }
         if(userService.selectByPrimaryKey(user.getUsername()) == null){//用户名没有被注册
-            System.out.println("username: "+user.getUsername()
-            +"birthday: "+user.getBirthday() + "level: "+user.getLevel());
-
             userService.insert(user);
             request.getSession().setAttribute("current_user",user.getUsername());
             return "success";
@@ -82,86 +84,33 @@ public class UserController {
      */
     @RequestMapping(value = "/getUser", method = RequestMethod.GET)
     @ResponseBody
-    public User getUser(@RequestParam String username){
+    public User getUser(HttpServletRequest request,@RequestParam(required = false) String username){
+        if(username == null){// 如果没有指定用户，就返回当前登录的用户
+            username = (String)request.getSession().getAttribute("current_user");
+            if(username == null)return null;
+        }
         return userService.selectByPrimaryKey(username);
     }
 
-    @RequestMapping(value = "/all", method = RequestMethod.GET)
+    /**
+     * 获取用户的所有的喜好keyword
+     */
+    @RequestMapping(value = "/getKeyword", method = RequestMethod.GET)
     @ResponseBody
-    public List<User> all(){return userService.selectAll(); }
+    public List<Keyword> getKeyword(@RequestParam String username) {
+        if (username == null) return null;
+        return userKeywordService.selectByUsername(username);
+    }
+
+    // 修改用户信息
+    @RequestMapping(value = "/updateUser", method = RequestMethod.POST)
+    @ResponseBody
+    public int updateUser(HttpServletRequest request,@RequestBody User user){
+        if(user.getUsername() == null || user.getUsername().equals(""))return 0;
+        // 如果用户名不合法或者是 不是当前登录用户，就拒绝操作
+        if(!user.getUsername().equals((String)request.getSession().getAttribute("current_user")))return 0;
+        return userService.updateByPrimaryKey(user);
+    }
+
+
 }
-
-/*
-
-
-
-     * 更改用户的基本信息
-     * @param user 用户实例
-     *
-    @RequestMapping(value = "/updateUserInfo" ,method = RequestMethod.POST)
-    @ResponseBody
-    public int update(@RequestBody User user){
-        return UserInfoService.updateUser(user);
-    }
-
-
-
-
-     * 处理管理员登录
-     * @param  administrator 管理员实例
-     * @return  number(int)
-     *
-    @RequestMapping(value = "/logInAdmin" ,method = RequestMethod.POST)
-    @ResponseBody
-    public int logInAdmin(HttpServletRequest request,@RequestBody Administrator administrator){
-        //获取session
-        HttpSession session = request.getSession();
-        //获取用户ID
-        String adminID = administrator.getAdministratorId();
-        String adminPassWord = administrator.getPassword();
-        //根据登录用户ID获取真实用户信息
-        Administrator trueAdmin = UserInfoService.getAdministrator(adminID);
-        //number标识符,1代码验证通过,2代表验证失败 默认失败
-        int number = 2;
-        String truePassWord = trueAdmin.getPassword();
-        if(truePassWord.equals(adminPassWord) ){
-            String name = trueAdmin.getName();
-            number = 1;
-            session.setAttribute("adminID",adminID);
-            session.setAttribute("adminName",name);
-            return number;
-        }
-        else{
-            return number;
-        }
-    }
-
-
-     * 批量查询收藏单词
-     *
-     *
-    @RequestMapping(value = "/getCollectionWords" ,method = RequestMethod.POST)
-    @ResponseBody
-    public List<WordCollection> getCollectionWords(@RequestBody Map<String,Object> map){
-        return UserInfoService.getCollectionWords(map);
-    }
-
-     * 批量查询已背诵单词
-     *
-     *
-    @RequestMapping(value = "/getRecitedWords" ,method = RequestMethod.POST)
-    @ResponseBody
-    public List<WordRecited> getRecitedWords(@RequestBody Map<String,Object> map){
-        return UserInfoService.getRecitedWords(map);
-    }
-
-
-     * 批量查询收藏的文章
-     *
-    @RequestMapping(value = "/getCollectionArticles" ,method = RequestMethod.POST)
-    @ResponseBody
-    public List<ArticleCollection> getCollectionArticles(@RequestBody Map<String,Object> map){
-        return UserInfoService.getCollectionArticles(map);
-    }
-}
-*/

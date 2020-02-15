@@ -70,4 +70,9 @@
   <select id="countByUsername" parameterType="java.lang.String" resultType="java.lang.Integer">
     select count(*) from article_collection where USERNAME = #{username,jdbcType=VARCHAR}
   </select>
+  <select id="selectByTime" parameterType="java.util.Date" resultMap="BaseResultMap">
+    select USERNAME, ARTICLE_ID, TIME
+    from article_collection
+    where time > #{date,jdbcType=TIMESTAMP}
+  </select>
 </mapper>

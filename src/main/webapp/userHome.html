@@ -10,7 +10,9 @@
     <title>个人主页</title>
     <link href="static/css/bootstrap/bootstrap.min.css" rel="stylesheet">
     <link href="static/css/font-awesome/font-awesome.min.css" rel="stylesheet">
+    <link href="static/css/toastr/toastr.min.css" rel="stylesheet">
     <link href="static/css/animate/animate.min.css" rel="stylesheet">
+    <link href="static/css/jqcloud/jqcloud.css" rel="stylesheet">
     <link href="static/css/theme.css" rel="stylesheet">
     <link href="static/css/responsive.css" rel="stylesheet">
     <!--[if lt IE 9]>
@@ -28,7 +30,7 @@
 <body>
     <!-- 导航栏 start -->
     <header id="header">
-        <div class="navbar navbar-inverse" role="banner">
+        <div class="navbar" role="banner">
             <div class="container">
                 <div class="navbar-header">
                     <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
@@ -55,154 +57,135 @@
     </header>
     <!-- 导航栏 end -->
 
-
-    <section id="page-breadcrumb">
-        <div class="vertical-center sun">
-             <div class="container">
-                <div class="row">
-                    <div class="action">
-                        <div class="col-sm-12">
-                            <h1 class="title">个人中心</h1>
-                            <p>来看看我的小屋吧.</p>
-                        </div>
-                     </div>
-                </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <h1 class="title">用户主页</h1><hr/>
             </div>
         </div>
-   </section>
-    <!--/#page-breadcrumb-->
 
-    
-    <section id="services">
-        <div class="container">
-            <div class="row">
-                <div class="col-sm-3 text-center padding wow fadeIn" data-wow-duration="1000ms" data-wow-delay="300ms">
-                    <div class="single-service">
-                        <a href="">
-                            <div class="wow scaleIn" data-wow-duration="500ms" data-wow-delay="300ms">
-                                <img src="static/img/home/icon01.jpg" alt="">
-                            </div>
-                            <h2>收藏单词</h2>
-                            <p>查看自己收藏的单词</p>
-                        </a>
-
+        <div class="row">
+            <div class="col-sm-3 text-center padding wow fadeInDownBig" data-wow-duration="1000ms" data-wow-delay="300ms">
+                <div class="single-service">
+                    <a id="collectWordHref" href="javascript:void(0);">
+                        <div class="wow scaleIn" data-wow-duration="500ms" data-wow-delay="300ms">
+                            <img src="static/img/home/icon01.jpg" alt="">
+                        </div>
+                        <h2>收藏单词</h2>
+                    </a>
+                    <div class="text-center wow fadeIn" data-wow-duration="1000ms" data-wow-delay="300ms">
+                        <h1 class="bold wordCollectionNum" data-to="1" data-speed="5000" data-from="0"></h1>
                     </div>
                 </div>
+            </div>
 
-                <div class="col-sm-3 text-center padding wow fadeIn" data-wow-duration="1000ms" data-wow-delay="600ms">
-                    <div class="single-service">
-                        <a href="">
+            <div class="col-sm-3 text-center padding wow fadeInDownBig" data-wow-duration="1000ms" data-wow-delay="600ms">
+                <div class="single-service">
+                    <a id="recitedWordHref" href="javascript:void(0);">
                         <div class="wow scaleIn" data-wow-duration="500ms" data-wow-delay="600ms">
                             <img src="static/img/home/icon02.jpg" alt="">
                         </div>
                         <h2>已背诵单词</h2>
-                        <p>查看自己已经背诵的单词</p>
-                        </a>
+                    </a>
+                    <div class="text-center wow fadeIn" data-wow-duration="1000ms" data-wow-delay="300ms">
+                        <h1 class="bold wordRecitedNum" data-to="1" data-speed="5000" data-from="0"></h1>
                     </div>
                 </div>
-                <div class="col-sm-3 text-center padding wow fadeIn" data-wow-duration="1000ms" data-wow-delay="900ms">
-                    <div class="single-service">
-                        <a href="">
+            </div>
+            <div class="col-sm-3 text-center padding wow fadeInDownBig" data-wow-duration="1000ms" data-wow-delay="900ms">
+                <div class="single-service">
+                    <a id="submitArticleHref" href="javascript:void(0)">
                         <div class="wow scaleIn" data-wow-duration="500ms" data-wow-delay="900ms">
                             <img src="static/img/home/icon03.jpg" alt="">
                         </div>
                         <h2>发表文章</h2>
-                        <p>查看自己发表的文章</p>
-                        </a>
+                    </a>
+                    <div class="text-center wow fadeIn" data-wow-duration="1000ms" data-wow-delay="300ms">
+                        <h1 class="bold articleSubmitNum" data-to="1" data-speed="5000" data-from="0"></h1>
                     </div>
                 </div>
-                <div class="col-sm-3 text-center padding wow fadeIn" data-wow-duration="1000ms" data-wow-delay="900ms">
-                    <div class="single-service">
-                        <a href="">
+            </div>
+            <div class="col-sm-3 text-center padding wow fadeInDownBig" data-wow-duration="1000ms" data-wow-delay="900ms">
+                <div class="single-service">
+                    <a id="collectArticleHref" href="javascript:void(0);">
                         <div class="wow scaleIn" data-wow-duration="500ms" data-wow-delay="900ms">
                             <img src="static/img/home/icon03.jpg" alt="">
                         </div>
-                        <h2>文章收藏</h2>
-                        <p>查看自己收藏的文章</p>
-                        </a>
+                        <h2>收藏文章</h2>
+                    </a>
+                    <div class="text-center wow fadeIn" data-wow-duration="1000ms" data-wow-delay="300ms">
+                        <h1 class="bold articleCollectionNum" data-to="1" data-speed="5000" data-from="0"></h1>
                     </div>
                 </div>
             </div>
         </div>
-    </section>
-    <!--/#services-->
 
-    <section id="action">
-        <div class="vertical-center">
-             <div class="container">
-                <div class="row">
-                    <div class="action count">
-                        <div class="col-sm-3 text-center wow bounceIn" data-wow-duration="1000ms" data-wow-delay="300ms">
-                            <h1 class="timer bold" data-to="7000" data-speed="3000" data-from="0"></h1>   
-                            <h3>Happy Clients</h3>
-                        </div>
-                        <div class="col-sm-3 text-center wow bounceIn" data-wow-duration="1000ms" data-wow-delay="300ms">
-                            <h1 class="timer bold" data-to="12" data-speed="3000" data-from="0"></h1>   
-                            <h3>Years in Business</h3> 
-                        </div>
-                        <div class="col-sm-3 text-center wow bounceIn" data-wow-duration="1000ms" data-wow-delay="300ms">
-                            <h1 class="timer bold" data-to="432" data-speed="3000" data-from="0"></h1> 
-                            <h3>Cups of Coffee</h3>
-                        </div>
-                        <div class="col-sm-3 text-center wow bounceIn" data-wow-duration="1000ms" data-wow-delay="300ms">
-                            <h1 class="timer bold" data-to="145" data-speed="3000" data-from="0"></h1> 
-                            <h3>Total Project</h3>
-                        </div>
-                    </div>
-                </div>
+        <div class="row">
+            <div class="col-md-10 col-md-offset-1 col-sm-12">
+                <hr/>
+                <h2 style="margin: 20px">prefer keywords</h2>
+                <div id="cloud" style="height: 250px"></div>
             </div>
         </div>
-   </section>
-    <!--/#action-->
 
-    <section id="company-information" class="padding-top">
-        <div class="container">
-            <div class="row">
-                <div class="about-us">
-                    <div class="col-sm-7 wow fadeInLeft" data-wow-duration="1000ms" data-wow-delay="300ms">
-                        <h2 class="bold">About Triangle</h2>
-                        <div class="row">
-                            <div class="col-sm-5">
-                                <!--<img src="static/img/aboutus/6.png" class="img-responsive" alt="">-->
-                                <img src="static/img/home/thinking.jpg" class="img-responsive" alt="">
-                            </div>
-                            <div class="col-sm-7">
-                                <h3 class="top-zero">Who we are</h3>
-                                <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. <br> <br> Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat.</p>
-                            </div>
+        <div class="row">
+            <hr/>
+            <div class="col-md-6 col-md-offset-1 col-sm-12">
+                <h3>基本信息</h3><hr/>
+                <div class="form-horizontal">
+                    <div class="form-group">
+                        <label for="profile_username" class="col-md-3 col-md-3 control-label">username</label>
+                        <div class="col-sm-9 col-md-9">
+                            <input type="text" id="profile_username" class="form-control input-lg" readonly="readonly"/>
                         </div>
                     </div>
-                    <div class="col-sm-5 wow fadeInRight" data-wow-duration="1000ms" data-wow-delay="300ms">
-                        <div class="our-skills">
-                            <h2 class="bold">Our Skills</h2>
-                            <div class="single-skill">
-                                <h3>Design</h3>
-                                <div class="progress">
-                                    <div class="progress-bar progress-bar-primary six-sec-ease-in-out" role="progressbar"  data-transition="35">35%</div>
-                                </div>
-                            </div>
-                            <div class="single-skill">
-                                <h3>HTML</h3>
-                                <div class="progress">
-                                    <div class="progress-bar progress-bar-primary six-sec-ease-in-out" role="progressbar"  data-transition="80">80%</div>
-                                </div>
-                            </div>
-                            <div class="single-skill">
-                                <h3>PHP</h3>
-                                <div class="progress">
-                                    <div class="progress-bar progress-bar-primary six-sec-ease-in-out" role="progressbar"  data-transition="60">60%</div>
-                                </div>
-                            </div>
+                    <div class="form-group">
+                        <label for="profile_email" class="col-md-3 col-md-3 control-label">e-mail</label>
+                        <div class="col-sm-9 col-md-9">
+                            <input type="email" id="profile_email" class="form-control input-lg" readonly="readonly"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="profile_phone_number" class="col-md-3 col-md-3 control-label">phone number</label>
+                        <div class="col-sm-9 col-md-9">
+                            <input type="number" id="profile_phone_number" class="form-control input-lg" readonly="readonly"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="profile_birthday" class="col-md-3 col-md-3 control-label">birthday</label>
+                        <div class="col-sm-9 col-md-9">
+                            <input type="date" id="profile_birthday" class="form-control input-lg" readonly="readonly"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="profile_qq_number" class="col-md-3 col-md-3 control-label">QQ number</label>
+                        <div class="col-sm-9 col-md-9">
+                            <input type="number" id="profile_qq_number" class="form-control input-lg" readonly="readonly"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="profile_nickname" class="col-md-3 col-md-3 control-label">nickname</label>
+                        <div class="col-sm-9 col-md-9">
+                            <input type="text" id="profile_nickname" class="form-control input-lg" readonly="readonly"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="profile_level" class="col-md-3 col-md-3 control-label">level</label>
+                        <div class="col-sm-9 col-md-9">
+                            <input type="text" id="profile_level" class="form-control input-lg" readonly="readonly"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="profile_register" class="col-md-3 col-md-3 control-label">register time</label>
+                        <div class="col-sm-9 col-md-9">
+                            <input type="date" id="profile_register" class="form-control input-lg" readonly="readonly"/>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </section>
-    <!--/#company-information-->
-    <!--/#team-->
 
-
+    </div>
 
     <!-- footer start -->
     <footer id="footer">
@@ -225,17 +208,105 @@
 <script type="text/javascript" src="static/js/bootstrap/bootstrap.min.js"></script>
 <script type="text/javascript" src="static/js/wow/wow.min.js"></script>
 <script type="text/javascript" src="static/js/jquery/jquery.md5.js"></script>
+<script type="text/javascript" src="static/js/toastr/toastr.min.js"></script>
 <script type="text/javascript" src="static/js/jquery/jquery.countTo.js"></script>
 <script type="text/javascript" src="static/js/gmaps/gmaps.min.js"></script>
+<script type="text/javascript" src="static/js/jqcloud/jqcloud-1.0.4.min.js"></script>
 <script type="text/javascript" src="static/js/user.js"></script>
 <script type="text/javascript" src="static/js/main.js"></script>
 <script>
     new WOW().init();
-    $('.timer').each(count);
     function count(options) {
-        var $this = $(this);
+        let $this = $(this);
         options = $.extend({}, options || {}, $this.data('countToOptions') || {});
         $this.countTo(options);
     }
+
+    let user={};
+    const param = getRequest();
+    if(param["username"] !== undefined) {// 如果有参数，也就是说查看他人的主页
+        user.username = param["username"];
+    }
+    getUser(user, function InIt() {// 获取用户信息之后的回调函数
+        $(".title").text(user.username + "的个人主页");
+        $.ajax({//获取单词背诵数
+            url: "word/countRecite",
+            type: "GET",
+            data: {"username": user.username},
+            success: function (data) {
+                $(".wordRecitedNum").attr("data-to",data);
+                $(".wordRecitedNum").each(count);
+                $("#recitedWordHref").attr("href",'./wordRecite.html?num='+data+'&type=review');
+            }
+        });
+        $.ajax({// 获取单词收藏数
+            url: "word/countCollect",
+            type: "GET",
+            data: {"username": user.username},
+            success: function (data) {
+                $(".wordCollectionNum").attr("data-to",data);
+                $(".wordCollectionNum").each(count);
+                $("#collectWordHref").attr("href",'./wordRecite.html?num='+data+'&type=collect');
+            }
+        });
+        $.ajax({// 获取文章提交数
+            url: "article/countArticleByAuthor",
+            type: "GET",
+            data: {"username": user.username},
+            success: function (data) {
+                $(".articleSubmitNum").attr("data-to",data);
+                $(".articleSubmitNum").each(count);
+                $("#submitArticleHref").attr("href",'./articleList.html?type=own&username='+user.username);
+            }
+        });
+        $.ajax({// 获取文章收藏数
+            url: "article/countArticleByCollect",
+            type: "GET",
+            data: {"username": user.username},
+            success: function (data) {
+                $(".articleCollectionNum").attr("data-to",data);
+                $(".articleCollectionNum").each(count);
+                $("#collectArticleHref").attr("href",'./articleList.html?type=collect&username='+user.username);
+            }
+        });
+        getKeyword(user.username,function (keywordList) {
+            let array=[];
+            for(let keyword of keywordList){
+                array.push({"text":keyword.keyword,"weight":keyword.tfidf});
+            }
+            if(array.length === 0){
+                $("#cloud").html("<h2>NULL</h2>");
+                return;
+            }
+            // 加载标签云
+            $("#cloud").jQCloud(array,{
+                removeOverflowing: false
+            });
+        });
+
+        // 基本信息加载
+        $("#profile_username").val(user.username);
+        $("#profile_email").val(user.email);
+        $("#profile_phone_number").val(user.phoneNumber);
+        let date=new Date(user.birthday);
+        let year=String(date.getFullYear());
+        while (year.length<4)year='0'+year;
+        let month=String(date.getMonth());
+        while (month.length < 2)month = '0' + month;
+        let day=String(date.getDate());
+        while (date.length < 2)day = '0' + day;
+        $("#profile_birthday").val(year+"-"+month+"-"+day);
+        $("#profile_qq_number").val(user.qqNumber);
+        $("#profile_nickname").val(user.nickname);
+        $("#profile_level").val(number2level[user.level]);
+        date = new Date(user.registerTime);
+        year=String(date.getFullYear());
+        while (year.length<4)year='0'+year;
+        month=String(date.getMonth());
+        while (month.length < 2)month = '0' + month;
+        day=String(date.getDate());
+        while (date.length < 2)day = '0' + day;
+        $("#profile_register").val(year+"-"+month+"-"+day);
+    });
 </script>
 </html>

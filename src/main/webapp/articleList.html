@@ -10,6 +10,7 @@
     <title>文章浏览</title>
     <link href="static/css/bootstrap/bootstrap.min.css" rel="stylesheet">
     <link href="static/css/font-awesome/font-awesome.min.css" rel="stylesheet">
+    <link href="static/css/toastr/toastr.min.css" rel="stylesheet">
     <link href="static/css/theme.css" rel="stylesheet">
     <link href="static/css/responsive.css" rel="stylesheet">
     <!--[if lt IE 9]>
@@ -27,7 +28,7 @@
 <body>
     <!-- 导航栏 start -->
     <header id="header">
-        <div class="navbar navbar-inverse" role="banner">
+        <div class="navbar" role="banner">
             <div class="container">
                 <div class="navbar-header">
                     <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
@@ -61,7 +62,7 @@
                     <div class="action">
                         <div class="col-sm-12">
                             <h1 class="title">文章浏览</h1>
-                            <p>文章列表</p>
+                            <p id="tips">文章列表</p>
                         </div>
                     </div>
                 </div>
@@ -73,7 +74,7 @@
     <section id="blog" class="padding-top">
         <div class="container">
             <div class="row">
-                <div class="col-md-3 col-sm-5">
+                <div class="col-md-2 col-sm-12 col-lg-2">
                     <div class="sidebar blog-sidebar">
                         <div class="sidebar-item categories">
                             <h3>Categories</h3>
@@ -83,7 +84,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-7 col-sm-7 col-md-offset-1">
+                <div class="col-md-7 col-sm-12 col-lg-7">
                     <div class="row" id="article">
                         <!-- article 加载区域 -->
                     </div>
@@ -95,6 +96,12 @@
                             <li><a href="javascript:void(0)">right</a></li>
                         </ul>
                     </div>
+                </div>
+                <div class="col-md-3 col-sm-12 col-lg-3">
+                    <h3> 您可能感兴趣的文章 </h3>
+                    <hr/>
+                    <ul class="nav navbar-stacked" id="recommend">
+                    </ul>
                 </div>
             </div>
         </div>
@@ -120,11 +127,28 @@
 <script type="text/javascript" src="static/js/jquery/jquery-3.4.1.min.js"></script>
 <script type="text/javascript" src="static/js/bootstrap/bootstrap.min.js"></script>
 <script type="text/javascript" src="static/js/jquery/jquery.md5.js"></script>
+<script type="text/javascript" src="static/js/toastr/toastr.min.js"></script>
 <script type="text/javascript" src="static/js/user.js"></script>
 <script type="text/javascript" src="static/js/main.js"></script>
 <script type="text/javascript" src="static/js/article.js"></script>
 <script type="text/javascript">
+    let type;//三种类型： view浏览所有的 ， collect 浏览用户收藏的 ， own 浏览用户发表的
+    const param =getRequest();
+    if(param["type"] === undefined)type="view";//默认就是浏览所有的
+    else type = param["type"];
+
+
     window.onload = getCategory;
     let now_page, max_page, now_categoryId;//当前页数，总共的页数, 当前的分类的id
+    articleRecommend();
+
+    if(type === "view")$("#tips").text("查看所有文章");
+    else if(type === "own"){
+        if(param["username"] === undefined)$("#tips").text("查看自己发表的文章");
+        else $("#tips").text("查看"+param["username"]+"发表的文章");
+    }
+    else if(type === "collect"){
+        if(param["username"] === undefined)$("#tips").text("查看自己收藏的文章");
+        else $("#tips").text("查看"+param["username"]+"收藏的文章");    }
 </script>
 </html>

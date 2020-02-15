@@ -78,4 +78,14 @@
       #{description,jdbcType=VARCHAR}, #{label,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}
       )
   </insert>
+
+  <select id="countAll" resultType="java.lang.Integer">
+    select count(*) from video
+  </select>
+
+  <select id="selectByPageLimit" resultMap="BaseResultMap" parameterType="Map">
+    select VIDEO_ID, VIDEO_NAME, VIDEO_ADDRESS, DESCRIPTION, LABEL, CREATE_TIME
+    from video
+    limit #{start,jdbcType=INTEGER},#{size,jdbcType=INTEGER}
+  </select>
 </mapper>

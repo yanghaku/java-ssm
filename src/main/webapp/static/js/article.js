@@ -1,7 +1,7 @@
 "use strict";
 
-const article_page_size = 2; //常量，文章列表每一页的文章数
-const max_show_page_num = 3; //最多显示的分页的个数
+const article_page_size = 10; //常量，文章列表每一页的文章数
+const max_show_page_num = 10; //最多显示的分页的个数
 
 /**
  *   articleList.html 需要的函数
@@ -17,8 +17,8 @@ function getCategory() {
             now_categoryId = data[0].categoryId;
             getArticle(data[0].categoryId,1);//默认先展示第一个分类的第一页
         },
-        error: function () {
-            myAlert("fail","fetch the article category fail");
+        error: function (data) {
+            toastr.error("fetch the article category fail! "+JSON.stringify(data),"fail!");
         }
     });
 }
@@ -26,16 +26,19 @@ function getCategory() {
 // 得到某一分类的某个页的文章列表
 function getArticle(categoryId,page) {
     page = (page-1)*article_page_size;//偏移量从0开始
+    let payload= {"categoryId":categoryId,"start": page, "size":article_page_size ,"type":type };
+    if(param["username"] !== undefined)payload.username = param["username"];
+
     $.ajax({
         url: "article/articleList",
         method: "GET",
+        data: payload,
         // (start,start+size]
-        data: {"categoryId":categoryId,"start": page, "size":article_page_size },
         success: function(data){
             insertArticle(data);
         },
-        error: function () {
-            myAlert("Fail","fetch article list fail");
+        error: function (data) {
+            toastr.error("fetch article list fail! "+JSON.stringify(data),"fail");
         }
     });
 }
@@ -54,10 +57,14 @@ function insertCategory(category_list) {
     max_page=1;
     // 获得每一个分类的文章数
     for(let i=0; i<category_list.length; ++i) {
+        let payload = {"categoryId": category_list[i].categoryId,
+                        "type": type };
+        if(param["username"] !== undefined)
+            payload.username = param["username"];
         $.ajax({
             url: "article/articleCount",
             type: "GET",
-            data: {"categoryId": category_list[i].categoryId },
+            data: payload,
             success: function (data) {
                 if(i === 0){
                     max_page = Math.ceil(data / article_page_size);
@@ -81,16 +88,16 @@ function insertArticle(article_list) {
         return;
     }
     for(let i=0; i<article_list.length; ++i){
-        article.append('<div class="col-md-12 col-sm-12"><div class="single-blog two-column">' +
+        article.append('<div class="col-md-12 col-sm-12" style="background-color: #f8ffff"><div class="single-blog two-column">' +
             '<div class="post-content overflow">' +
-            '<h2 class="post-title bold"><a href="articleDetail.html?articleId='+article_list[i].articleId+'">'+ article_list[i].name +'</a></h2>' +
-            '<h3 class="post-author">Posted by <a href="javascript:void(0)">'+ article_list[i].username +'</h3>' +
+            '<h2 class="post-title bold"><a href="articleDetail.html?articleId='+article_list[i].articleId+'">'+ article_list[i].title +'</a></h2>' +
+            '<h3 class="post-author">Posted by <a href="./userHome.html?username='+article_list[i].username+'" target="_blank">'+ article_list[i].username +'</h3>' +
             '<p style="margin: 20px">' + article_list[i].content.substring(0,100) + '[...]</p>' +
             '<a href="articleDetail.html?articleId='+article_list[i].articleId +'" class="read-more">View More</a>' +
             '<div class="post-bottom overflow">' +
             '<ul class="nav navbar-nav post-nav">' +
             '<li><a href="javascript:void(0)"><i class="fa fa-folder-open"></i>'+article_list[i].clicks+' Clicks</a></li>' +
-            '<li><a href="javascript:void(0)"><i class="fa fa-thumbs-up"></i>'+article_list[i].agrees + ' Agress</a></li>' +
+            '<li><a href="javascript:void(0)"><i class="fa fa-thumbs-up"></i><span class="articleId'+article_list[i].articleId+'agree"></span></a></li>' +
             '<li><a href="javascript:void(0)"><i class="fa fa-heart"></i><span class="articleId'+article_list[i].articleId+'collect"></span></a></li>' +
             '<li><a href="javascript:void(0)"><i class="fa fa-comments"></i><span class="articleId'+article_list[i].articleId+'comment"></span></a></li>' +
             '</ul></div></div></div></div>');
@@ -106,6 +113,17 @@ function insertArticle(article_list) {
             },
             error: function () {
                 $(".articleId"+item.articleId+"collect").text("null Collects");
+            }
+        });
+        $.ajax({//agrees
+            url: "article/articleAgreeCount",
+            type: "GET",
+            data: payload,
+            success: function (num) {
+                $(".articleId"+item.articleId+"agree").text(num+" Agrees");
+            },
+            error: function () {
+                $(".articleId"+item.articleId+"agree").text("null Agrees");
             }
         });
         $.ajax({//comments
@@ -161,14 +179,14 @@ function changePage(page){
     if(page === "left" || page === "right"){
         let range_L = list[1].children[0].text;
         if(range_L === "right"){// 最大页数为 0 的时候
-            myAlert("Error","no page!");
+            toastr.error("no page!", "Error");
             return;
         }
         range_L = Number(range_L);
         let range_R = range_L + max_show_page_num; //确定当前的范围 [range_L,range_R)
         if(page === "left"){
             if(range_L === 1){
-                myAlert("Error", "No page change!");
+                toastr.info("No page change!");
                 return;
             }
             for(let i=1; i+1<list.length;++i){
@@ -188,7 +206,7 @@ function changePage(page){
         }
         else{//right
             if(range_R > max_page){
-                myAlert("Error", "No page change!");
+                toastr.info("No page change!");
                 return;
             }
             for(let i=1; i+1 < list.length; ++i){
@@ -238,7 +256,7 @@ function articleDetail() {
         success: function (data) {
             if(typeof (data) !== "object"){
                 dom.append('<h1 class="text-center text-danger">fetch the article fail</h1>');
-                myAlert("fail","fetch the article Error!");
+                toastr.error("fetch the article Error!" + data, "fail");
                 return;
             }
             marked.setOptions({//设置markdown的语法高亮
@@ -247,18 +265,18 @@ function articleDetail() {
                     return hljs.highlight(lang,code).value;
                 }
             });
-            $("title").text(data.name + " --文章阅读");
+            $("title").text(data.title + " --文章阅读");
 
-            dom.append('<h1 class="post-title bold" id="' + data.articleId + '">' + data.name+ '</h1><hr/>' +
+            dom.append('<h1 class="post-title bold" id="' + data.articleId + '">' + data.title+ '</h1><hr/>' +
             '<h5 class="post-author">' +
-                '<span><i class="fa fa-user-plus"></i>Post By <a href="javascript:void(0);">' + data.username+ '</a></span>' +
+                '<span><i class="fa fa-user-plus"></i>Post By <a href="./userHome.html?username='+data.username+'" target="_blank">' + data.username+ '</a></span>' +
                 '<span style="margin-left: 20px"><i class="fa fa-clock-o"></i>Create Time: ' + (new Date(data.createTime)).toLocaleString() + '</span>' +
                 '<span style="margin-left: 20px"><i class="fa fa-clock-o"></i>Last Modified: '+ (new Date(data.modifyTime)).toLocaleString() + '</span>' +
             '</h5><hr/>' +
             '<div id="content" style="margin: 20px 10px;font-size: 18px">' + marked(data.content)+ '</div>' +
             '<div class="post-bottom overflow"><ul class="nav navbar-nav post-nav">' +
                 '<li><a href="javascript:void(0)"><i class="fa fa-folder-open"></i>'+data.clicks+' Clicks</a></li>' +
-                '<li><a href="javascript:void(0)" onclick="articleAgree('+ data.articleId+ ');"><i class="fa fa-thumbs-o-up"></i>'+ data.agrees + ' Agress</a></li>' +
+                '<li><a href="javascript:void(0)" onclick="articleAgree('+ data.articleId+ ');"><i class="fa fa-thumbs-o-up"></i><span class="agree_num"></span></a></li>' +
                 '<li><a href="javascript:void(0)" onclick="articleCollection('+ data.articleId + ');"><i class="fa fa-heart-o"></i><span class="collect_num"></span></a></li>' +
                 '<li><a href="javascript:void(0)"><i class="fa fa-comments"></i><span class="comment_num"></span></a></li>' +
             '</ul></div>' + // end post-bottom
@@ -291,12 +309,45 @@ function articleDetail() {
                     }
                 }
             });
-
+            $.ajax({//获取点赞的数量
+                url: "article/articleAgreeCount",
+                type: "GET",
+                data: {"articleId":data.articleId},
+                success: function (num) {
+                    $(".agree_num").text(num+" Agrees");
+                },
+                error: function () {
+                    $(".agree_num").text("null Agrees");
+                }
+            });
+            $.ajax({//获取文章是否被点赞
+                url: "article/getArticleAgree",
+                type: "GET",
+                data: {"articleId":data.articleId},
+                success: function (data) {
+                    if(data === 1){
+                        let dom = $(".fa-thumbs-o-up");
+                        dom.addClass("fa-thumbs-up");
+                        dom.removeClass("fa-thumbs-o-up");
+                    }
+                }
+            });
+            addEditButton(data.articleId,data.username);// 页面上增加编辑按钮
             getComments(data.articleId);//然后加载对应的评论
         },
-        error: function () {
+        error: function (data) {
             dom.append('<h1 class="text-center text-danger">fetch the article fail</h1>');
-            myAlert("fail","fetch the article fail!");
+            toastr.error("fetch the article fail! "+JSON.stringify(data),"error");
+        }
+    });
+}
+
+// 如果文章阅读的用户和发表的是同一个用户，就会出现编辑按钮
+function addEditButton(articleId,username) {
+    let user={};
+    getUser(user,function () {
+        if(username === user.username){
+            $(".edit").html('<button class="btn btn-lg btn-primary" onclick="window.location.href=\'./articleEdit.html?articleId='+articleId+'\';">编辑</button>');
         }
     });
 }
@@ -304,26 +355,38 @@ function articleDetail() {
 // 文章被点赞
 function articleAgree(articleId) {
     let dom = $(".fa-thumbs-o-up");
-    if(dom.length <= 0)return; //已经点赞了
+    if(dom.length <= 0) {
+        toastr.info("you are already agree this!");//已经点赞了
+        return;
+    }
     let num_arr = dom.parent().text().split(' ');//点赞数加一
     dom.parent().html('<i class="fa fa-thumbs-up"></i>' + String(Number(num_arr[0])+1) + ' ' + num_arr[1] );
     $.ajax({
-        url: "article/articleAgree",
+        url: "article/insertArticleAgree",
         type: "GET",
-        data: {"articleId": articleId}
+        data: {"articleId": articleId},
+        success:function () {
+            toastr.success("agree successful!");
+        }
     });
 }
 
 // 收藏文章
 function articleCollection(articleId) {
     let dom = $(".fa-heart-o");
-    if(dom.length <= 0)return;//已经收藏了
+    if(dom.length <= 0){
+        toastr.info("you are already collect this!");//已经收藏了
+        return;
+    }
     let num_arr = dom.parent().text().split(' ');//收藏数加一
     dom.parent().html('<i class="fa fa-heart"></i>' + String(Number(num_arr[0])+1) + ' ' + num_arr[1] );
     $.ajax({
         url: "article/insertArticleCollect",
         type: "GET",
-        data: {"articleId": articleId}
+        data: {"articleId": articleId},
+        success: function () {
+            toastr.success("collect successful!");
+        }
     })
 }
 
@@ -340,7 +403,7 @@ function getComments(articleId){
             for(let comment of data){
                 dom.append('<li class="media commentBody">'+'' +
                 '<div class="post-comment"><div class="media-body">' +
-                '<span><i class="fa fa-user"></i>Posted by <a href="javascript:void(0);">' + comment.username + '</a></span>' +
+                '<span><i class="fa fa-user"></i>Posted by <a href="./userHome.html?username='+comment.username+'" target="_blank">' + comment.username + '</a></span>' +
                 '<p>' + marked(comment.content) + '</p>' +
                 '<ul class="nav navbar-nav post-nav">' +
                     '<li><a href="javascript:void(0);"><i class="fa fa-clock-o"></i>' + (new Date(comment.createTime)).toLocaleString() + '</a></li>' +
@@ -348,8 +411,8 @@ function getComments(articleId){
                 '</ul></div></div></li>');
            }
         },
-        error: function () {
-           myAlert("fail","fetch the comments fail!");
+        error: function (data) {
+           toastr.error("fetch the comments fail! "+JSON.stringify(data),"fail");
        }
     });
 }
@@ -363,10 +426,10 @@ function sendComment(comment) {
         contentType:"application/json;charset=utf-8",
         success:function(data){
             if(data !== undefined && data !== {}){//成功返回插入后的comment
-                myAlert("success!","add comment success");
+                toastr.success("add comment success! ");
                 $("#comment_list").append('<li class="media commentBody">'+'' +
                     '<div class="post-comment"><div class="media-body">' +
-                    '<span><i class="fa fa-user"></i>Posted by <a href="javascript:void(0);">' + data.username + '</a></span>' +
+                    '<span><i class="fa fa-user"></i>Posted by <a href="./userHome.html?username='+data.username+'" target="_blank">' + data.username + '</a></span>' +
                     '<p>' + marked(data.content) + '</p>' +
                     '<ul class="nav navbar-nav post-nav">' +
                     '<li><a href="javascript:void(0);"><i class="fa fa-clock-o"></i>' + (new Date(data.createTime)).toLocaleString() + '</a></li>' +
@@ -376,11 +439,11 @@ function sendComment(comment) {
                 $(".comment_num").text( String(Number(num_arr[0])+1)+ " " + num_arr[1] );
             }
             else{
-                myAlert("fail","user not login");
+                toastr.error("user not login","fail");
             }
         },
         error(data){
-            myAlert("fail","add comment fail! Network error!");
+            toastr.error("add comment fail! Network error! "+JSON.stringify(data),"fail");
         }
     });
 }
@@ -390,7 +453,7 @@ function comment2article() {
     let commentEntity = {};
     commentEntity.content= $(".commentInput").val();
     if(commentEntity.content == null || commentEntity.content === ""){
-        myAlert("Error", "content could not be null!");
+        toastr.warning("content could not be null!");
         return;
     }
     commentEntity.articleId = $(".post-title").attr("id");
@@ -414,7 +477,7 @@ function comment2comment(commentId) {
     commentEntity.content= $(".replyInput").val();
     commentEntity.refId = commentId;
     if(commentEntity.content == null || commentEntity.content === ""){
-        myAlert("Error", "content could not be null!");
+        toastr.warning("content could not be null!");
         return;
     }
     commentEntity.articleId = $(".post-title").attr("id");
@@ -454,33 +517,33 @@ function articleEditInIt() {
                         return;
                     }
                     articleEntry = article; //保存原来的文章对象
-                    $("#title").val(article.name);
+                    $("#title").val(article.title);
                     $("#category").val(article.categoryId);
                     acen_edit.insert(article.content);
                 }
             });
         },
-        error: function () {
-            myAlert("fail","fetch the article category fail");
+        error: function (data) {
+            toastr("fetch the article category fail! "+JSON.stringify(data),"fail");
         }
     });// 得到分类列表并加载
 }
 
 // 文章的提交
 function articleSubmit(url) {
-    articleEntry.name = $("#title").val();
+    articleEntry.title = $("#title").val();
     articleEntry.categoryId = $("#category").val();
     articleEntry.content = acen_edit.getValue();
-    if(articleEntry.name == null || articleEntry.name === ""){
-        myAlert("Error","article title could not be null!");
+    if(articleEntry.title == null || articleEntry.title === ""){
+        toastr.error("article title could not be null!");
         return;
     }
     if(articleEntry.categoryId === undefined || articleEntry.categoryId == null){
-        myAlert("Error","please choose a category!");
+        toastr.error("please choose a category!");
         return;
     }
     if(articleEntry.content == null || articleEntry.content === ""){
-        myAlert("Error","article content could not be null!");
+        toastr.error("article content could not be null!");
         return;
     }
     $.ajax({
@@ -490,14 +553,36 @@ function articleSubmit(url) {
         data: JSON.stringify(articleEntry),
         success: function (articleId) {
             if(articleId === -1){
-                myAlert("fail","submit Fail");
+                toastr.error("submit Fail");
                 return;
             }
-            myAlert("success","submit success!");
+            toastr.success("submit success!");
             window.location.href = "./articleDetail.html?articleId="+articleId;
         },
         error: function (data) {
-            myAlert("Error","net work error!" + JSON.stringify(data));
+            toastr.error("submit fail! " + JSON.stringify(data),"fail");
+        }
+    });
+}
+
+
+
+// 文章推荐列表
+function articleRecommend() {
+    let dom = $("#recommend");
+    if(dom.length === 0)return;
+    $.ajax({
+        url: "article/getArticleRecommend",
+        type: "GET",
+        success: function(articles){
+            for(let article of articles){
+                dom.append('<li><a href="./articleDetail.html?articleId='+article.articleId+'" target="_blank">'
+            +'<span style="font-size: larger">'+article.title+'</span><span class="pull-right" style="color: #449d44">'+ article.clicks +' <small>Clicks</small></span>'+
+            '</a><hr style="margin: 0 0 15px 0"/></li>');
+            }
+        },
+        error: function (data) {
+            toastr.error("fetch the recommend articles fail! "+JSON.stringify(data),"fail");
         }
     });
 }

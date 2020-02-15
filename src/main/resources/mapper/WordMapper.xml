@@ -75,4 +75,32 @@
     EXAMPLE_TRANSLATE, SITUATION
     from word
   </select>
+
+
+  <select id="selectNew" resultMap="BaseResultMap">
+    select WORD_NAME, WORD_TYPE, VOICE_ADDRESS, PICTURE_ADDRESS, WORD_TRANSLATE, WORD_EXAMPLE,
+    EXAMPLE_TRANSLATE, SITUATION
+    from word
+    where
+    (select count(*) from word_recited wr where wr.word_name=word.word_name and wr.username=#{username,jdbcType=VARCHAR} ) = 0
+    and
+    (select count(*) from word_collection wc where wc.word_name=word.word_name and wc.username=#{username,jdbcType=VARCHAR} ) = 0
+    limit 0,#{size,jdbcType=INTEGER}
+  </select>
+  <select id="selectReview" resultMap="BaseResultMap">
+    select WORD_NAME, WORD_TYPE, VOICE_ADDRESS, PICTURE_ADDRESS, WORD_TRANSLATE, WORD_EXAMPLE,
+    EXAMPLE_TRANSLATE, SITUATION
+    from word natural inner join word_recited
+    where username=#{username,jdbcType=VARCHAR}
+    order by last_recite desc
+    limit 0,#{size,jdbcType=INTEGER}
+  </select>
+  <select id="selectCollect" resultMap="BaseResultMap">
+    select WORD_NAME, WORD_TYPE, VOICE_ADDRESS, PICTURE_ADDRESS, WORD_TRANSLATE, WORD_EXAMPLE,
+    EXAMPLE_TRANSLATE, SITUATION
+    from word natural inner join word_collection
+    where username=#{username,jdbcType=VARCHAR}
+    order by time desc
+    limit 0,#{size,jdbcType=INTEGER}
+  </select>
 </mapper>

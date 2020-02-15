@@ -63,4 +63,9 @@
     select USERNAME, WORD_NAME, TIME
     from word_collection
   </select>
+  <select id="countByUsername" parameterType="java.lang.String" resultType="java.lang.Integer">
+    select count(*)
+    from word_collection
+    where USERNAME = #{username,jdbcType=VARCHAR}
+  </select>
 </mapper>

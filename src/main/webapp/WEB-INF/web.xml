@@ -19,10 +19,13 @@
     <listener-class>org.springframework.web.util.IntrospectorCleanupListener</listener-class>
   </listener>
 
-  <!-- Spring和mybatis的配置文件 -->
+  <!-- Spring 和 mybatis 和 定时任务 的配置文件 -->
   <context-param>
     <param-name>contextConfigLocation</param-name>
-    <param-value>classpath:spring-mybatis.xml</param-value>
+    <param-value>
+      classpath:spring-mybatis.xml
+      classpath:spring-task.xml
+    </param-value>
   </context-param>
 
   <!-- Spring字符集过滤器 -->

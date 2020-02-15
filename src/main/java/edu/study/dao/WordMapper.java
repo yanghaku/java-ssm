@@ -1,6 +1,8 @@
 package edu.study.dao;
 
 import edu.study.model.Word;
+import org.apache.ibatis.annotations.Param;
+
 import java.util.List;
 
 public interface WordMapper {
@@ -43,4 +45,10 @@ public interface WordMapper {
      * @mbg.generated Tue Jan 21 10:57:40 CST 2020
      */
     int updateByPrimaryKey(Word record);
+
+    List<Word> selectNew(@Param("username")String username,@Param("size")Integer size);
+
+    List<Word> selectReview(@Param("username")String username,@Param("size")Integer size);
+
+    List<Word> selectCollect(@Param("username")String username,@Param("size")Integer size);
 }
