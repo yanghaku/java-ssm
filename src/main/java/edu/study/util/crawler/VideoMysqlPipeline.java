@@ -1,7 +1,7 @@
 package edu.study.util.crawler;
 
-import edu.study.dao.VideoMapper;
 import edu.study.model.Video;
+import edu.study.service.VideoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import us.codecraft.webmagic.ResultItems;
@@ -16,7 +16,7 @@ import java.util.Map;
 public class VideoMysqlPipeline implements Pipeline {
 
     @Autowired
-    VideoMapper videoService;
+    VideoService videoService;
 
     @Override
     // 实现处理函数
@@ -28,7 +28,7 @@ public class VideoMysqlPipeline implements Pipeline {
         video.setVideoName((String) mp.get("name"));
         video.setVideoAddress((String) mp.get("url"));
         video.setLabel("VOA");
-        videoService.insertAndGetId(video);
+        videoService.videoInsertAndGetId(video);
     }
 
 }

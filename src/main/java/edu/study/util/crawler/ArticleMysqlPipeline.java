@@ -1,8 +1,8 @@
 package edu.study.util.crawler;
 
 
-import edu.study.dao.ArticleMapper;
 import edu.study.model.Article;
+import edu.study.service.ArticleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import us.codecraft.webmagic.ResultItems;
@@ -16,7 +16,7 @@ import java.util.Random;
 @Component
 public class ArticleMysqlPipeline implements Pipeline {
     @Autowired
-    ArticleMapper articleService;
+    ArticleService articleService;
 
     private static final Random random = new Random();
 
@@ -36,6 +36,6 @@ public class ArticleMysqlPipeline implements Pipeline {
         article.setCategoryId(1);// 新闻
         article.setUsername("123");//默认
 
-        articleService.insertAndGetId(article);
+        articleService.articleInsertAndGetId(article);
     }
 }

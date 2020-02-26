@@ -1,11 +1,9 @@
 package edu.study.controller;
 
-import edu.study.dao.WordCollectionMapper;
-import edu.study.dao.WordMapper;
-import edu.study.dao.WordRecitedMapper;
 import edu.study.model.Word;
 import edu.study.model.WordCollection;
 import edu.study.model.WordRecited;
+import edu.study.service.WordService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,13 +20,7 @@ import java.util.List;
 public class WordController {
 
     @Autowired
-    WordMapper wordService;
-
-    @Autowired
-    WordCollectionMapper wordCollectionService;
-
-    @Autowired
-    WordRecitedMapper wordRecitedService;
+    WordService wordService;
 
     @RequestMapping(value = "getWords", method = RequestMethod.GET)
     @ResponseBody
@@ -54,7 +46,7 @@ public class WordController {
     Integer judgeCollected(HttpServletRequest request,@RequestParam String wordName){
         String username = (String)request.getSession().getAttribute("current_user");
         if(username == null || wordName==null)return null;
-        if(wordCollectionService.selectByPrimaryKey(username,wordName) != null)return 1;
+        if(wordService.collectSelectByPrimaryKey(username,wordName) != null)return 1;
         return 0;
     }
 
@@ -64,7 +56,7 @@ public class WordController {
     Integer judgeRecited(HttpServletRequest request,@RequestParam String wordName){
         String username = (String)request.getSession().getAttribute("current_user");
         if(username == null || wordName==null)return null;
-        return wordRecitedService.countByPrimaryKey(username,wordName);
+        return wordService.reciteCountByPrimaryKey(username,wordName);
     }
 
     // 新增收藏单词
@@ -77,7 +69,7 @@ public class WordController {
         wordCollection.setTime(new Date());
         wordCollection.setUsername(username);
         wordCollection.setWordName(wordName);
-        return wordCollectionService.insert(wordCollection);
+        return wordService.collectInsert(wordCollection);
     }
 
     // 新增记住单词
@@ -91,7 +83,7 @@ public class WordController {
         wordRecited.setLastRecite(new Date());
         wordRecited.setUsername(username);
         wordRecited.setWordName(wordName);
-        return wordRecitedService.replace(wordRecited);
+        return wordService.reciteReplace(wordRecited);
     }
 
     // 查询用户记住的单词量
@@ -99,7 +91,7 @@ public class WordController {
     @ResponseBody
     Integer countRecite(@RequestParam String username){
         if(username == null)return 0;
-        return wordRecitedService.countByUsername(username);
+        return wordService.reciteCountByUsername(username);
     }
 
     // 查询用户收藏的单词量
@@ -107,6 +99,6 @@ public class WordController {
     @ResponseBody
     Integer countCollect(@RequestParam String username){
         if(username == null)return 0;
-        return wordCollectionService.countByUsername(username);
+        return wordService.collectCountByUsername(username);
     }
 }

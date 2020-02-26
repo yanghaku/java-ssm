@@ -2,14 +2,14 @@ package edu.study.util.recommend;
 
 import edu.stanford.nlp.simple.Document;
 import edu.stanford.nlp.simple.Sentence;
-import edu.study.dao.ArticleMapper;
 import edu.study.model.Keyword;
+import edu.study.service.ArticleService;
 
 import java.util.*;
 
 public class TFIDF {
 
-    public static List<Keyword> getTFIDF(String title, String content, int keywordNum, ArticleMapper articleService){
+    public static List<Keyword> getTFIDF(String title, String content, int keywordNum, ArticleService articleService){
         List<String> words = cut(content);
         words.addAll(cut(title));
         int total = words.size();//总词数
@@ -28,9 +28,9 @@ public class TFIDF {
         }
 
         // 然后计算逆文档频率
-        double articleTotal = articleService.countAll();//总文档个数
+        double articleTotal = articleService.articleCountAll();//总文档个数
         for(Map.Entry<String,Double> entry: tfidf.entrySet()){
-            int num = articleService.countLike("%"+entry.getKey()+"%") + 1;//包含该词的文档数
+            int num = articleService.articleCountLike("%"+entry.getKey()+"%") + 1;//包含该词的文档数
             entry.setValue(entry.getValue() * Math.log(articleTotal/num));
         }
 

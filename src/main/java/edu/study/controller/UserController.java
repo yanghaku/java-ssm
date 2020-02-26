@@ -1,9 +1,8 @@
 package edu.study.controller;
 
-import edu.study.dao.UserKeywordMapper;
-import edu.study.dao.UserMapper;
 import edu.study.model.Keyword;
 import edu.study.model.User;
+import edu.study.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -17,10 +16,8 @@ import java.util.List;
 public class UserController {
 
     @Autowired
-    UserMapper userService;
+    UserService userService;
 
-    @Autowired
-    UserKeywordMapper userKeywordService;
 
     /**
      * 获取当前用户状态
@@ -38,7 +35,7 @@ public class UserController {
     @RequestMapping(value = "/login" ,method = RequestMethod.POST)
     @ResponseBody
     public String login(HttpServletRequest request,@RequestBody User request_user){
-        User user = userService.selectByPrimaryKey(request_user.getUsername());
+        User user = userService.userSelectByPrimaryKey(request_user.getUsername());
         if(user == null){// 如果用户没有查到，返回用户不存在
             return "No Such User!";
         }
@@ -69,8 +66,8 @@ public class UserController {
         if(user.getUsername() == null || user.getUsername().equals("")){
             return "username could not be null";
         }
-        if(userService.selectByPrimaryKey(user.getUsername()) == null){//用户名没有被注册
-            userService.insert(user);
+        if(userService.userSelectByPrimaryKey(user.getUsername()) == null){//用户名没有被注册
+            userService.userInsert(user);
             request.getSession().setAttribute("current_user",user.getUsername());
             return "success";
         }
@@ -89,7 +86,7 @@ public class UserController {
             username = (String)request.getSession().getAttribute("current_user");
             if(username == null)return null;
         }
-        return userService.selectByPrimaryKey(username);
+        return userService.userSelectByPrimaryKey(username);
     }
 
     /**
@@ -99,7 +96,7 @@ public class UserController {
     @ResponseBody
     public List<Keyword> getKeyword(@RequestParam String username) {
         if (username == null) return null;
-        return userKeywordService.selectByUsername(username);
+        return userService.keywordSelectByUsername(username);
     }
 
     // 修改用户信息
@@ -109,7 +106,7 @@ public class UserController {
         if(user.getUsername() == null || user.getUsername().equals(""))return 0;
         // 如果用户名不合法或者是 不是当前登录用户，就拒绝操作
         if(!user.getUsername().equals((String)request.getSession().getAttribute("current_user")))return 0;
-        return userService.updateByPrimaryKey(user);
+        return userService.userUpdateByPrimaryKey(user);
     }
 
 

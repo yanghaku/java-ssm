@@ -1,8 +1,9 @@
 package edu.study.util.recommend;
 
 
-import edu.study.dao.*;
 import edu.study.model.*;
+import edu.study.service.ArticleService;
+import edu.study.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -13,22 +14,11 @@ public class ContentBasedRecommend {
 
     // 需要用到的数据库服务
     @Autowired
-    ArticleMapper articleService;
+    ArticleService articleService;
 
     @Autowired
-    ArticleAgreeMapper articleAgreeService;
+    UserService userService;
 
-    @Autowired
-    ArticleCollectionMapper articleCollectionService;
-
-    @Autowired
-    ArticleKeywordMapper articleKeywordService;
-
-    @Autowired
-    UserKeywordMapper userKeywordService;
-
-    @Autowired
-    ArticleRecommendMapper articleRecommendService;
 
     private Date lastRefreshDate;//维护上次更新的时间
 
@@ -70,7 +60,7 @@ public class ContentBasedRecommend {
             return;
         }
 
-        List<ArticleKeyword> articleKeywordList = articleKeywordService.selectAll();
+        List<ArticleKeyword> articleKeywordList = articleService.articleKeywordSelectAll();
         // 预处理所有的文章的关键词保存下来
         HashMap<Integer,List<Keyword> >articleKeyword = new HashMap<>();
         for(ArticleKeyword item : articleKeywordList){
@@ -119,7 +109,7 @@ public class ContentBasedRecommend {
             }
 
             // 删除数据库中原先的推荐信息
-            articleRecommendService.deleteByUsername(userEntry.getKey());
+            articleService.recommendDeleteByUsername(userEntry.getKey());
 
             // 如果推荐的列表大于需要推荐的个数，就排序，添加前面推荐值高的
             // 保存到数据库中
@@ -128,9 +118,9 @@ public class ContentBasedRecommend {
 
             if(articleRecommends.size() > RECOMMEND_NUM){
                 sortRecommendList(articleRecommends);
-                articleRecommendService.insertList(articleRecommends.subList(0,RECOMMEND_NUM));
+                articleService.recommendInsertList(articleRecommends.subList(0,RECOMMEND_NUM));
             }
-            else articleRecommendService.insertList(articleRecommends);
+            else articleService.recommendInsertList(articleRecommends);
         }
 
         // 最后将lastRefreshTime 更新成本次更新的时间
@@ -142,12 +132,12 @@ public class ContentBasedRecommend {
      * 将lastrefreshTime ~ 至今 时间段的文章的关键词更新
      */
     private void articleKeywordRefresh(){
-        List<Article> articleList = articleService.selectByModifyTime(lastRefreshDate);
+        List<Article> articleList = articleService.articleSelectByModifyTime(lastRefreshDate);
         for(Article article : articleList){
             // 对于每个文章，分析出关键词列表
             List<Keyword> keywordList = TFIDF.getTFIDF(article.getTitle(),article.getContent(),ARTICLE_KEYWORD_MAX_NUM,articleService);
             // 使用sql批量修改
-            if(!keywordList.isEmpty())articleKeywordService.replaceInto(article.getArticleId(),keywordList);
+            if(!keywordList.isEmpty())articleService.keywordReplaceInto(article.getArticleId(),keywordList);
         }
     }
 
@@ -166,10 +156,10 @@ public class ContentBasedRecommend {
         // 处理过程中keyword 保存为hashmap ，便于合并（降低查找复杂度）
 
         // 1. 文章收藏
-        List<ArticleCollection> articleCollectionList = articleCollectionService.selectByTime(lastRefreshDate);
+        List<ArticleCollection> articleCollectionList = articleService.collectSelectByTime(lastRefreshDate);
         if(articleCollectionList != null) {
             for (ArticleCollection articleCollection : articleCollectionList) {
-                List<Keyword> articleKeywordList = articleKeywordService.selectByArticleId(articleCollection.getArticleId());
+                List<Keyword> articleKeywordList = articleService.keywordSelectByArticleId(articleCollection.getArticleId());
                 if(articleKeywordList == null || articleKeywordList.isEmpty())continue;
                 if (record.containsKey(articleCollection.getUsername())) {
                     // 如果已经有了就合并
@@ -195,10 +185,10 @@ public class ContentBasedRecommend {
         }
 
         // 2. 文章点赞
-        List<ArticleAgree> articleAgreeList = articleAgreeService.selectByTime(lastRefreshDate);
+        List<ArticleAgree> articleAgreeList = articleService.agreeSelectByTime(lastRefreshDate);
         if(articleAgreeList != null) {
             for (ArticleAgree articleAgree : articleAgreeList) {
-                List<Keyword> articleKeywordList = articleKeywordService.selectByArticleId(articleAgree.getArticleId());
+                List<Keyword> articleKeywordList = articleService.keywordSelectByArticleId(articleAgree.getArticleId());
                 if(articleKeywordList == null || articleKeywordList.isEmpty())continue;
                 if (record.containsKey(articleAgree.getUsername())) {
                     // 如果已经有了就合并
@@ -225,7 +215,7 @@ public class ContentBasedRecommend {
         // 将增加的关键词 与 用户原先的合并
         // 然后将更新的键值 保存到数据库中
         for(HashMap.Entry<String,HashMap<String,Double> > entry : record.entrySet()){
-            List<Keyword> userKeywordList = userKeywordService.selectByUsername(entry.getKey());
+            List<Keyword> userKeywordList = userService.keywordSelectByUsername(entry.getKey());
             if(userKeywordList != null) {
                 for (Keyword keyword : userKeywordList) {
                     // 如果已经有就合并
@@ -251,7 +241,7 @@ public class ContentBasedRecommend {
             }
 
             // 最后将此保存到数据库中
-            userKeywordService.replaceInto(entry.getKey(),userKeywordList);
+            userService.keywordReplaceInto(entry.getKey(),userKeywordList);
         }
 
         return record;
@@ -313,6 +303,6 @@ public class ContentBasedRecommend {
         double day = to.getTime() - from.getTime();
         day /= (1000 * 60 * 60 * 24 ); //两者相隔的天数
         double dec = Math.pow(AUTO_DEC_NUM , day);
-        userKeywordService.mulAll(dec);
+        userService.keywordMulAll(dec);
     }
 }

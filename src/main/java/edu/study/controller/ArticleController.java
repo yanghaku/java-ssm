@@ -1,7 +1,7 @@
 package edu.study.controller;
 
-import edu.study.dao.*;
 import edu.study.model.*;
+import edu.study.service.ArticleService;
 import edu.study.util.recommend.ContentBasedRecommend;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -15,22 +15,7 @@ import java.util.*;
 public class ArticleController {
 
     @Autowired
-    ArticleCategoryMapper articleCategoryService;
-
-    @Autowired
-    ArticleMapper articleService;
-
-    @Autowired
-    CommentMapper commmentService;
-
-    @Autowired
-    ArticleAgreeMapper articleAgreeService;
-
-    @Autowired
-    ArticleCollectionMapper articleCollectionService;
-
-    @Autowired
-    ArticleRecommendMapper articleRecommendService;
+    ArticleService articleService;
 
 
     /**
@@ -45,7 +30,7 @@ public class ArticleController {
     @RequestMapping(value = "/category", method = RequestMethod.GET)
     @ResponseBody
     public List<ArticleCategory> getCategory(){
-        return articleCategoryService.selectAll();
+        return articleService.categorySelectAll();
     }
 
     // 获取某一分类的文章数
@@ -86,7 +71,7 @@ public class ArticleController {
 
         if(type == null)return null;
         if(type.equals("view")) {// 如果是浏览全部，就直接查询
-            return articleService.selectByPageLimit(mp);
+            return articleService.articleSelectByPageLimit(mp);
         }
 
         if(username == null){
@@ -96,10 +81,10 @@ public class ArticleController {
         mp.put("username",username);
 
         if(type.equals("own")){
-            return articleService.selectByPageLimitUsername(mp);
+            return articleService.articleSelectByPageLimitUsername(mp);
         }
         else if(type.equals("collect")){
-            return articleService.selectByPageLimitCollect(mp);
+            return articleService.articleSelectByPageLimitCollect(mp);
         }
         else return null;
     }
@@ -124,7 +109,7 @@ public class ArticleController {
         if(request.getSession().getAttribute("current_user") == null)return null;
         // 点击量加一
         articleService.updateArticleClicks(articleId);
-        return articleService.selectByPrimaryKey(articleId);
+        return articleService.articleSelectByPrimaryKey(articleId);
     }
 
     // 增加新的文章
@@ -136,7 +121,7 @@ public class ArticleController {
         article.setClicks(0);
         article.setCreateTime(new Date());
         article.setModifyTime(new Date());
-        if(articleService.insertAndGetId(article) == 1){
+        if(articleService.articleInsertAndGetId(article) == 1){
             return article.getArticleId();
         }
         return -1;
@@ -149,7 +134,7 @@ public class ArticleController {
         String username = (String)request.getSession().getAttribute("current_user");
         if(username == null || !username.equals(article.getUsername())) return -1;
         article.setModifyTime(new Date());
-        if(articleService.updateByPrimaryKey(article) == 1){
+        if(articleService.articleUpdateByPrimaryKey(article) == 1){
             return article.getArticleId();
         }
         return -1;
@@ -173,7 +158,7 @@ public class ArticleController {
     @ResponseBody
     public List<Comment> getComment(HttpServletRequest request,@RequestParam Integer articleId){
         if(request.getSession().getAttribute("current_user") == null)return null;
-        return commmentService.selectByArticleId(articleId);
+        return articleService.commentSelectByArticleId(articleId);
     }
 
     // 文章增加评论
@@ -183,7 +168,7 @@ public class ArticleController {
         comment.setUsername((String)request.getSession().getAttribute("current_user"));
         if(comment.getUsername() == null)return null;
         comment.setCreateTime(new Date());
-        if( commmentService.insertAndGetId(comment) == 1) return comment;
+        if( articleService.commentInsertAndGetId(comment) == 1) return comment;
         return null;
     }
 
@@ -191,7 +176,7 @@ public class ArticleController {
     @RequestMapping(value = "/commentCount", method = RequestMethod.GET)
     @ResponseBody
     public Integer commentCount(@RequestParam Integer articleId){
-        return commmentService.countByArticleId(articleId);
+        return articleService.commentCountByArticleId(articleId);
     }
 
 
@@ -209,7 +194,7 @@ public class ArticleController {
     @RequestMapping(value = "/articleCollectCount",method = RequestMethod.GET)
     @ResponseBody
     public Integer articleCollectCount(@RequestParam Integer articleId){
-        return articleCollectionService.countByArticleId(articleId);
+        return articleService.collectCountByArticleId(articleId);
     }
 
     // 获取
@@ -218,7 +203,7 @@ public class ArticleController {
     @ResponseBody
     public Integer getArticleCollect(HttpServletRequest request, @RequestParam Integer articleId){
         String username = (String)request.getSession().getAttribute("current_user");
-        if(username == null || articleCollectionService.selectByPrimaryKey(username,articleId) == null )
+        if(username == null || articleService.collectSelectByPrimaryKey(username,articleId) == null )
             return 0;
         return 1;
     }
@@ -233,7 +218,7 @@ public class ArticleController {
         articleCollection.setUsername(username);
         articleCollection.setArticleId(articleId);
         articleCollection.setTime(new Date());
-        return articleCollectionService.insert(articleCollection);
+        return articleService.collectInsert(articleCollection);
     }
 
 
@@ -249,7 +234,7 @@ public class ArticleController {
     @RequestMapping(value = "/articleAgreeCount",method = RequestMethod.GET)
     @ResponseBody
     public Integer articleAgreeCount(@RequestParam Integer articleId){
-        return articleAgreeService.countByArticleId(articleId);
+        return articleService.agreeCountByArticleId(articleId);
     }
 
     // 获取用户是否点赞 某篇文章
@@ -257,7 +242,7 @@ public class ArticleController {
     @ResponseBody
     public Integer getArticleAgree(HttpServletRequest request, @RequestParam Integer articleId){
         String username = (String)request.getSession().getAttribute("current_user");
-        if(username == null || articleAgreeService.selectByPrimaryKey(username,articleId) == null )
+        if(username == null || articleService.selectByPrimaryKey(username,articleId) == null )
             return 0;
         return 1;
     }
@@ -272,7 +257,7 @@ public class ArticleController {
         articleAgree.setUsername(username);
         articleAgree.setArticleId(articleId);
         articleAgree.setTime(new Date());
-        return articleAgreeService.insert(articleAgree);
+        return articleService.agreeInsert(articleAgree);
     }
 
 
@@ -290,10 +275,10 @@ public class ArticleController {
         List<Article> res =new ArrayList<>();
         Object attr = request.getSession().getAttribute("articleRecommend");
         if(attr == null){
-            List<Integer> article_ids = articleRecommendService.selectByUsername(username);
+            List<Integer> article_ids = articleService.recommendSelectByUsername(username);
             Set<Integer> set = new HashSet<>();// 记录已经添加的articleId（去重）
             for(Integer article_id: article_ids){
-                Article article = articleService.selectByPrimaryKey(article_id);
+                Article article = articleService.articleSelectByPrimaryKey(article_id);
                 if(article != null){
                     res.add(article);
                     set.add(article.getArticleId());
@@ -301,7 +286,7 @@ public class ArticleController {
             }
             // 如果推荐的个数不到规定的个数, 就获取点击量最多的文章来补充
             if(res.size()< ContentBasedRecommend.RECOMMEND_NUM){
-                List<Article> articles = articleService.selectByclicks(ContentBasedRecommend.RECOMMEND_NUM);
+                List<Article> articles = articleService.articleSelectByclicks(ContentBasedRecommend.RECOMMEND_NUM);
                 for(Article article:articles){
                     if(set.contains(article.getArticleId()))continue;
                     res.add(article);
@@ -324,14 +309,14 @@ public class ArticleController {
     @ResponseBody
     Integer countArticleByAuthor(@RequestParam String username){
         if(username==null)return 0;
-        return articleService.countByAuthor(username);
+        return articleService.articlecountByAuthor(username);
     }
 
     @RequestMapping(value = "/countArticleByCollect", method = RequestMethod.GET)
     @ResponseBody
     Integer countArticleByCollect(@RequestParam String username){
         if(username == null)return 0;
-        return articleService.countByCollect(username);
+        return articleService.articleCountByCollect(username);
     }
 
 }
